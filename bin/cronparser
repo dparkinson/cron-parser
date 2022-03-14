@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+require_relative '../cron_parser'
+
+# Early circuit breaker for missing input.
+puts 'You must provide a cron string to parse.' and exit if ARGV.empty?
+
+parser = CronParser.new(ARGV)
+
+# Check to see if the parse was successful and if not display 
+# all the errors that occurred during parsing.
+unless parser.valid?
+    puts
+    puts "The cron string has errors."
+    parser.errors.each do |k, error|
+        puts "  " + error
+    end
+end
+
+puts
+# Build the output table of fields and values.
+%w{minute hour day_of_month month day_of_week command}.each do |field|
+    puts "#{field.ljust(14)} #{parser.send(field).to_s}"
+end

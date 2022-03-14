@@ -1,0 +1,2 @@
+class FieldValueException < StandardError
+end
